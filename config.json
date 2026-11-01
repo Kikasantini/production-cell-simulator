@@ -1,0 +1,8 @@
+{
+  "machine_name": "Demo Cell 01",
+  "work_order_id": "WO-1001",
+  "target_quantity": 10,
+  "max_signal_attempts": 15,
+  "signal_interval_seconds": 0.8,
+  "missed_signal_numbers": [3]
+}
