@@ -3,6 +3,7 @@
   "work_order_id": "WO-1001",
   "target_quantity": 10,
   "max_signal_attempts": 15,
-  "signal_interval_seconds": 0.8,
+  "max_consecutive_missed_signals": 3,
+  "signal_interval_seconds": 0.1,
   "missed_signal_numbers": [3]
 }

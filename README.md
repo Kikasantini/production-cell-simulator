@@ -14,6 +14,7 @@ A small Python project that simulates sensor signals from a production cell, tra
 - `signal_interval_seconds`: pause between the simulated signals.
 - `max_signal_attempts`: maximum number of signals the simulator can generate.
 - `missed_signal_numbers`: specific signals where no piece will be detected.
+- `max_consecutive_missed_signals`: number of consecutive missed signals allowed before the simulator stops with a sensor fault.
 
 ## Running the Simulator
 This project uses only Python's standard library, so no additional packages are required.
