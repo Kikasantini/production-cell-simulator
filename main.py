@@ -76,21 +76,22 @@ def write_log(event_type, piece_count):
         })
 
 
-# Main
-def main():
+def run_production(
+        work_order_id,
+        target_quantity,
+        max_signal_attempts,
+        signal_interval_seconds,
+        missed_signal_numbers,
+        max_consecutive_missed_signals
+):
     piece_count = 0
     consecutive_missed_signals = 0
     cell_state = CellState.IDLE
 
-    print(f"Machine: {machine_name}")
-    print(f"Work order: {work_order_id}")
-    print(f"Target quantity: {target_quantity} pieces")
-    print("\nSimulating sensor signals...\n")
-
     cell_state = CellState.RUNNING
     for signal_number in range(1, max_signal_attempts + 1):
         time.sleep(signal_interval_seconds)
-        piece_detected = simulate_sensor_signal(signal_number, config["missed_signal_numbers"])
+        piece_detected = simulate_sensor_signal(signal_number, missed_signal_numbers)
         if piece_detected:
             consecutive_missed_signals = 0
             piece_count += 1
@@ -113,11 +114,30 @@ def main():
                 print("\nSensor fault: maximum consecutive missed signals reached.")
                 write_log("sensor_fault", piece_count)
                 break
-
+    
     if piece_count < target_quantity and cell_state != CellState.FAULT:
         cell_state = CellState.INCOMPLETE
         print(f"Work order incomplete: produced {piece_count}/{target_quantity} pieces after {max_signal_attempts} signal attempts.")  
         write_log("order_incomplete", piece_count)
+
+    return cell_state, piece_count
+
+
+# Main
+def main():
+    print(f"Machine: {machine_name}")
+    print(f"Work order: {work_order_id}")
+    print(f"Target quantity: {target_quantity} pieces")
+    print("\nSimulating sensor signals...\n")
+
+    cell_state, piece_count = run_production(
+        work_order_id=work_order_id,
+        target_quantity=target_quantity,
+        max_signal_attempts=max_signal_attempts,
+        signal_interval_seconds=signal_interval_seconds,
+        missed_signal_numbers=config["missed_signal_numbers"],
+        max_consecutive_missed_signals=max_consecutive_missed_signals,
+    )
 
     print(f"\nCell state: {cell_state.value}")
     print(f"\nEvent log saved to: {log_path.name}")
